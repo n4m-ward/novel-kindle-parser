@@ -54,28 +54,18 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', () => {
-        // Load email from localStorage
-        const emailInput = document.getElementById('email');
-        const savedEmail = localStorage.getItem('email');
-        const inputQuantidade = document.getElementById('quantidade')
-        const inputUrl = document.getElementById('url')
-        if (savedEmail) {
-            emailInput.value = savedEmail;
-        }
-
-        emailInput.addEventListener('input', () => {
-            localStorage.setItem('email', emailInput.value);
-        });
-
         const form = document.getElementById('parseForm');
         const submitButton = document.getElementById('submitButton');
 
         form.addEventListener('submit', async (e) => {
             e.preventDefault();
+            const emailInput = document.getElementById('email');
+            const inputQuantidade = document.getElementById('quantidade')
+            const inputUrl = document.getElementById('url')
 
-            // Change button state to "Carregando..."
             submitButton.disabled = true;
             submitButton.textContent = "Carregando...";
+            localStorage.setItem('email', emailInput.value);
 
             const data = {
                 email: emailInput.value,
@@ -98,7 +88,6 @@
 
                     inputQuantidade.value = '';
                     inputUrl.value = '';
-                    localStorage.removeItem('email');
                 } else {
                     const errorData = await response.json();
                     console.error('Erro na resposta:', errorData);
@@ -113,6 +102,10 @@
             }
         });
     });
+
+    window.onload = () => {
+        document.getElementById('email').value = localStorage.getItem('email') ?? '';
+    }
 </script>
 </body>
 </html>

@@ -33,8 +33,8 @@ class NovelParserController
         if($quantity > 1) {
             $ebookTitle .= " mais ". $quantity - 1 ." capitulos";
         }
-        $epub = new Epub();
-        $epubPath = $epub->generate($ebookTitle, $chapterList);
+        $epub = new Epub(bookName:  $ebookTitle, chapters: $chapterList);
+        $epubPath = $epub->generate();
         $this->sendEpub($epubPath, $ebookTitle, $request->email);
         unlink($epubPath);
 

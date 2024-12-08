@@ -6,34 +6,35 @@ use App\Http\Controllers\ChapterResume;
 
 class Epub
 {
-    private $tempDir;
-    private $epubFile;
+    private string $tempDir;
 
-    public function __construct()
-    {
+    /**
+     * @param ChapterResume[] $chapters
+     */
+    public function __construct(
+        private readonly string $bookName,
+        private readonly array  $chapters = [],
+    ) {
         $this->tempDir = storage_path("app/".uniqid('epub_'));
     }
 
     /**
-     * @param string $bookName
-     * @param ChapterResume[] $chapters
-     * @return string
      * @throws \Exception
      */
-    public function generate(string $bookName, array $chapters): string
+    public function generate(): string
     {
         $this->prepareDirectories();
 
         $this->createMimetype();
         $this->createContainerXML();
-        $this->createContentOPF($bookName, $chapters);
-        $this->createChapters($chapters);
+        $this->createContentOPF($this->bookName, $this->chapters);
+        $this->createChapters($this->chapters);
 
-        $this->epubFile = $this->generateEPUBFile($bookName, $chapters);
+        $epubFile = $this->generateEPUBFile($this->bookName, $this->chapters);
 
         $this->cleanTemporaryFiles();
 
-        return $this->epubFile;
+        return $epubFile;
     }
 
     private function prepareDirectories(): void

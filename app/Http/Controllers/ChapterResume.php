@@ -41,7 +41,7 @@ class ChapterResume
         $chapterContent = preg_replace('/<iframe.*?<\/iframe>/is', '', $chapterContent);;
 
         return new self (
-            title: $tr->translate($title),
+            title: $title,
             nextChapterUrl: $nextChapterUrl,
             chapter: $tr->translate($chapterTitle),
 //            content: $tr->translate(implode("\n", $chapterContent))

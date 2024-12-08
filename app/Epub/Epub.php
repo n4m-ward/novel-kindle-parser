@@ -102,7 +102,7 @@ class Epub
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
     <head>
-        <title>' . htmlspecialchars($chapter->title) . '</title>
+        <title>' . htmlspecialchars($chapter->chapter) . '</title>
     </head>
     <body>
         ' . nl2br(htmlspecialchars($chapter->chapter)) . '
@@ -119,12 +119,11 @@ class Epub
         $zip = new \ZipArchive();
 
         if ($zip->open($epubFile, \ZipArchive::CREATE | \ZipArchive::OVERWRITE) === TRUE) {
-            $zip->addFile($this->tempDir . '/mimetype', 'mimetype');
+            $zip->addFile("$this->tempDir/mimetype", 'mimetype');
 
             $zip->addEmptyDir('META-INF');
-            $zip->addFile($this->tempDir . '/META-INF/container.xml', 'META-INF/container.xml');
-
-            $zip->addFile($this->tempDir . '/content.opf', 'content.opf');
+            $zip->addFile("$this->tempDir/META-INF/container.xml", 'META-INF/container.xml');
+            $zip->addFile("$this->tempDir/content.opf", 'content.opf');
 
             foreach ($chapters as $index => $chapter) {
                 $chapterFile = 'chapter' . ($index + 1) . '.xhtml';
@@ -141,8 +140,8 @@ class Epub
 
     private function cleanTemporaryFiles(): void
     {
-        unlink($this->tempDir . '/META-INF/container.xml');
-        rmdir($this->tempDir . '/META-INF');
+        unlink("$this->tempDir/META-INF/container.xml");
+        rmdir("$this->tempDir/META-INF");
         $files = glob($this->tempDir . '/*');
         foreach ($files as $file) {
             unlink($file);

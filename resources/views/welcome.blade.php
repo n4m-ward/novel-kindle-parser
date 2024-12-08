@@ -34,7 +34,6 @@
                    placeholder="Insira a quantidade de capítulos" min="1">
         </div>
 
-        <!-- Confirm Button -->
         <div class="text-center">
             <button type="submit" id="submitButton"
                     class="w-full bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 focus:ring-4 focus:ring-blue-300">
@@ -42,6 +41,15 @@
             </button>
         </div>
     </form>
+    <div class="text-center mt-2">
+        <a href="/log-viewer" target="_blank">
+            <button type="submit" id="submitButton"
+                    class="w-full bg-green-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 focus:ring-4 focus:ring-blue-300">
+                Logs
+            </button>
+        </a>
+
+    </div>
 </div>
 
 <script>
@@ -55,12 +63,10 @@
             emailInput.value = savedEmail;
         }
 
-        // Save email to localStorage on change
         emailInput.addEventListener('input', () => {
             localStorage.setItem('email', emailInput.value);
         });
 
-        // Handle form submission
         const form = document.getElementById('parseForm');
         const submitButton = document.getElementById('submitButton');
 
@@ -102,7 +108,6 @@
                 console.error('Erro ao conectar:', error);
                 alert('Erro ao conectar ao servidor.');
             } finally {
-                // Reset button state
                 submitButton.disabled = false;
                 submitButton.textContent = "Confirmar";
             }

@@ -51,7 +51,7 @@ class NovelParserController
             return $output;
         }
 
-        foreach (range(1, $quantity) as $i) {
+        foreach (range(1, $quantity -1) as $i) {
             $last = ChapterResume::loadByUrl($last->nextChapterUrl);
             $output[] = $last;
         }

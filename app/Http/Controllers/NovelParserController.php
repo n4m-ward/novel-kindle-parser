@@ -22,7 +22,7 @@ class NovelParserController
         $url = $request->get('url');
         $quantity = $request->get('quantity', 1);
 
-        if(!str_contains($url, ChapterResume::NOVELFULL_BASE_URL)) {
+        if(!str_contains($url, ChapterResume::NOVELFULL_BASE_URL) && !str_contains($url, ChapterResume::NOVELFULL_BASE_URL2)) {
             throw new \Exception("Novel precisa pertencer ao site novelfull.com");
         }
 

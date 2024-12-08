@@ -11,6 +11,7 @@ use Symfony\Component\DomCrawler\Crawler;
 class ChapterResume
 {
     public const NOVELFULL_BASE_URL = 'https://novelfull.com';
+    public const NOVELFULL_BASE_URL2 = 'https://novelfull.net';
 
     public function __construct(
         public readonly string $title,
@@ -35,7 +36,8 @@ class ChapterResume
         $title = $crawler->filter('a.truyen-title')->text();
         $chapterTitle = $crawler->filter('.chapter-text')->text();
         $nextChapterEndpoint = $crawler->filter('#next_chap')->attr('href');
-        $nextChapterUrl = self::NOVELFULL_BASE_URL . $nextChapterEndpoint;
+        $baseUrl = str_contains($url, self::NOVELFULL_BASE_URL) ? self::NOVELFULL_BASE_URL : self::NOVELFULL_BASE_URL2;
+        $nextChapterUrl = $baseUrl . $nextChapterEndpoint;
 
         $chapterContent = $crawler
             ->filter('#chapter-content')

@@ -7,14 +7,14 @@
     "license": "MIT",
     "require": {
         "php": "^8.2",
+        "ext-zip": "*",
         "dompdf/dompdf": "^3.0",
         "grandt/phpepub": "^4.0",
         "laravel/framework": "^11.31",
         "laravel/tinker": "^2.9",
-        "michelf/php-markdown": "^2.0",
+        "opcodesio/log-viewer": "^3.12",
         "stichoza/google-translate-php": "^5.2",
-        "symfony/dom-crawler": "^7.2",
-        "ext-zip": "*"
+        "symfony/dom-crawler": "^7.2"
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",

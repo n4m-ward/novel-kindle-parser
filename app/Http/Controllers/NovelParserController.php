@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Epub\Ebook;
 use App\Epub\Epub;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 
 class NovelParserController
 {
@@ -15,7 +15,8 @@ class NovelParserController
     public function parse(Request $request): JsonResponse
     {
         $request->validate([
-            'url' => 'required|url'
+            'url' => 'required|url',
+            'email' => 'required|email',
         ]);
 
         $url = $request->get('url');
@@ -30,10 +31,12 @@ class NovelParserController
         $firstChapter = $chapterList[0];
         $ebookTitle = $firstChapter->title . " ". $firstChapter->chapter;
         if($quantity > 1) {
-            $ebookTitle .= " + ". $quantity - 1 ." caps";
+            $ebookTitle .= " mais ". $quantity - 1 ." capitulos";
         }
         $epub = new Epub();
-        $epub->generate($ebookTitle, $chapterList);
+        $epubPath = $epub->generate($ebookTitle, $chapterList);
+        $this->sendEpub($epubPath, $ebookTitle, $request->email);
+        unlink($epubPath);
 
         return response()->json();
     }
@@ -54,5 +57,16 @@ class NovelParserController
         }
 
         return $output;
+    }
+
+    private function sendEpub(string $path, string $title, string $email) {
+        Mail::raw($title, function ($message) use ($path, $title, $email) {
+            $message->to($email)
+                ->subject($title)
+                ->attach($path, [
+                    'as' => str_replace(' ', '-', $title).'.epub',
+                    'mime' => 'application/epub+zip',
+                ]);
+        });
     }
 }

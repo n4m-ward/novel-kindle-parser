@@ -35,17 +35,23 @@ class ChapterResume
         $title = $crawler->filter('a.truyen-title')->text();
         $chapterTitle = $crawler->filter('.chapter-text')->text();
         $nextChapterEndpoint = $crawler->filter('#next_chap')->attr('href');
-        $nextChapterUrl = self::NOVELFULL_BASE_URL.$nextChapterEndpoint;
+        $nextChapterUrl = self::NOVELFULL_BASE_URL . $nextChapterEndpoint;
 
-        $chapterContent = $crawler->filter('#chapter-content')->html();
-        $chapterContent = preg_replace('/<iframe.*?<\/iframe>/is', '', $chapterContent);;
+        $chapterContent = $crawler
+            ->filter('#chapter-content')
+            ->filter('p')
+            ->each(function (Crawler $node, $i) {
+                if ($node->text() === '') {
+                    return "‎";
+                }
+                return $node->text();
+            });
 
         return new self (
             title: $title,
             nextChapterUrl: $nextChapterUrl,
             chapter: $tr->translate($chapterTitle),
-//            content: $tr->translate(implode("\n", $chapterContent))
-            content: $tr->translate($chapterContent)
+            content: $tr->translate(implode("\n", $chapterContent))
         );
     }
 }

@@ -105,6 +105,7 @@ class Epub
         <title>' . htmlspecialchars($chapter->title) . '</title>
     </head>
     <body>
+        ' . nl2br(htmlspecialchars($chapter->chapter)) . '
         ' . nl2br(htmlspecialchars($chapter->content)) . '
     </body>
 </html>';
@@ -114,23 +115,20 @@ class Epub
 
     private function generateEPUBFile(string $bookName, array $chapters): string
     {
-        $epubFile = preg_replace('/[^a-zA-Z0-9]/', '_', strtolower($bookName)) . '.epub';
+        $epubFile = storage_path('app/' . preg_replace('/[^a-zA-Z0-9]/', '_', strtolower($bookName)) . '.epub');
         $zip = new \ZipArchive();
 
         if ($zip->open($epubFile, \ZipArchive::CREATE | \ZipArchive::OVERWRITE) === TRUE) {
-            // Adicionar mimetype (sem compressão)
             $zip->addFile($this->tempDir . '/mimetype', 'mimetype');
-            $zip->setCompressionName('mimetype', \ZipArchive::CM_STORE);
 
-            // Adicionar META-INF/container.xml
+            $zip->addEmptyDir('META-INF');
             $zip->addFile($this->tempDir . '/META-INF/container.xml', 'META-INF/container.xml');
 
-            // Adicionar content.opf
             $zip->addFile($this->tempDir . '/content.opf', 'content.opf');
 
-            // Adicionar capítulos
             foreach ($chapters as $index => $chapter) {
-                $zip->addFile($this->tempDir . '/chapter' . ($index + 1) . '.xhtml', 'chapter' . ($index + 1) . '.xhtml');
+                $chapterFile = 'chapter' . ($index + 1) . '.xhtml';
+                $zip->addFile($this->tempDir . '/' . $chapterFile, $chapterFile);
             }
 
             $zip->close();
@@ -143,15 +141,12 @@ class Epub
 
     private function cleanTemporaryFiles(): void
     {
+        unlink($this->tempDir . '/META-INF/container.xml');
+        rmdir($this->tempDir . '/META-INF');
         $files = glob($this->tempDir . '/*');
         foreach ($files as $file) {
-            if (is_dir($file)) {
-                $this->cleanTemporaryFiles($file);
-            } else {
-                unlink($file);
-            }
+            unlink($file);
         }
-        rmdir($this->tempDir . '/META-INF');
         rmdir($this->tempDir);
     }
 }

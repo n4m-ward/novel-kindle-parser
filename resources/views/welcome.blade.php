@@ -70,7 +70,7 @@
             const data = {
                 email: emailInput.value,
                 url: form.url.value,
-                quantidade: form.quantidade.value
+                quantity: form.quantidade.value
             };
 
             try {

@@ -27,14 +27,11 @@ class NovelParserController
         }
 
         $chapterList = $this->parseMultiple($url, $quantity);
-        /** @var ChapterResume $firstChapter */
-        $firstChapter = $chapterList[0];
-        $ebookTitle = $firstChapter->title . " ". $firstChapter->chapter;
-        if($quantity > 1) {
-            $ebookTitle .= " mais ". $quantity - 1 ." capitulos";
-        }
+        $ebookTitle = $this->getTitle($chapterList[0], $quantity);
+
         $epub = new Epub(bookName:  $ebookTitle, chapters: $chapterList);
         $epubPath = $epub->generate();
+
         $this->sendEpub($epubPath, $ebookTitle, $request->email);
         unlink($epubPath);
 
@@ -59,7 +56,8 @@ class NovelParserController
         return $output;
     }
 
-    private function sendEpub(string $path, string $title, string $email) {
+    private function sendEpub(string $path, string $title, string $email): void
+    {
         Mail::raw($title, function ($message) use ($path, $title, $email) {
             $message->to($email)
                 ->subject($title)
@@ -68,5 +66,14 @@ class NovelParserController
                     'mime' => 'application/epub+zip',
                 ]);
         });
+    }
+
+    private function getTitle(ChapterResume $firstChapter, mixed $quantity): string
+    {
+        $ebookTitle = $firstChapter->title . " " . $firstChapter->chapter;
+        if ($quantity > 1) {
+            $ebookTitle .= " mais " . $quantity - 1 . " capitulos";
+        }
+        return $ebookTitle;
     }
 }

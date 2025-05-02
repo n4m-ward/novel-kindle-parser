@@ -41,15 +41,15 @@
             </button>
         </div>
     </form>
-    <div class="text-center mt-2">
-        <a href="/log-viewer" target="_blank">
-            <button type="submit" id="submitButton"
-                    class="w-full bg-green-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 focus:ring-4 focus:ring-blue-300">
-                Logs
-            </button>
-        </a>
+{{--    <div class="text-center mt-2">--}}
+{{--        <a href="/log-viewer" target="_blank">--}}
+{{--            <button type="submit" id="submitButton"--}}
+{{--                    class="w-full bg-green-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 focus:ring-4 focus:ring-blue-300">--}}
+{{--                Logs--}}
+{{--            </button>--}}
+{{--        </a>--}}
 
-    </div>
+{{--    </div>--}}
 </div>
 
 <script>

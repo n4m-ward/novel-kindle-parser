@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Actions\TranslateChapterAction;
 use Stichoza\GoogleTranslate\Exceptions\LargeTextException;
 use Stichoza\GoogleTranslate\Exceptions\RateLimitException;
 use Stichoza\GoogleTranslate\Exceptions\TranslationRequestException;
@@ -53,7 +54,7 @@ class ChapterResume
             title: $title,
             nextChapterUrl: $nextChapterUrl,
             chapter: $tr->translate($chapterTitle),
-            content: $tr->translate(implode("\n", $chapterContent))
+            content: (new TranslateChapterAction())->execute(implode("\n", $chapterContent)),
         );
     }
 }
